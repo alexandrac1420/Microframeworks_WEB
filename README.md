@@ -70,9 +70,9 @@ You need to install the following tools and configure their dependencies:
 
     Should display output similar to:
     ```sh
-    [INFO] --- jar:3.3.0:jar (default-jar) @ AplicacionesDistriuidas ---
-    [INFO] Building jar: C:\Users\alexa\OneDrive\Escritorio\Aplicaciones_Distribuidas\target\AplicacionesDistriuidas-1.0-SNAPSHOT.jar
-    [INFO] BUILD SUCCESS
+      [INFO] --- jar:3.3.0:jar (default-jar) @ Spark ---
+      [INFO] Building jar: C:\Users\alexa\OneDrive\Escritorio\Microframeworks_WEB\target\Spark-1.0-SNAPSHOT.jar
+      [INFO] BUILD SUCCESS
     ```
 
 3. Run the application:
@@ -86,7 +86,7 @@ You need to install the following tools and configure their dependencies:
     Ready to receive on port 8080...
     ```
 
-    And now you can access `index.html` and other static files.
+    And now you can access `index.html` and other static files in http://localhost:8080/index.html
 
     
 ## Architecture
