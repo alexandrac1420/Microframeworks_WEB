@@ -88,10 +88,22 @@ You need to install the following tools and configure their dependencies:
 
     And now you can access `index.html` and other static files in http://localhost:8080/index.html
 
+### Usage
+
+1. **Static Files**: Access `index.html` and other static files (CSS, JavaScript, images) by navigating to `http://localhost:808index.html` in your web browser.
+
+2. **Dynamic Greeting**: 
+   - **GET Request**: Open `index.html` in your browser. You can input a name into the provided form. The server will send a GET request to `/app/hello?name=<YourName>` and respond with a JSON message and plain text greeting. For example, if you input "World", the response will include:
+     - **JSON**: `{"nombre": "World"}`
+     - **Plain Text**: `Hola, World`
+
+3. **POST Request**: 
+   - **POST Request**: Using a tool like Postman or a similar HTTP client, send a POST request to `http://localhost:8080/app/hello` with a payload containing a name. The server will respond with a message indicating the received input, e.g., `Post received: <YourName>`. For example, sending a POST request with the payload `{"name": "Jose Mario"}` will return `Post received: Jose Mario`.
+
     
 ## Architecture
 
-![Architecture Diagram](https://github.com/alexandrac1420/Aplicaciones_Distribuidas/blob/master/out/diagrama/diagrama.png)
+![Architecture Diagram](https://github.com/alexandrac1420/Microframeworks_WEB/blob/master/Pictures/Arquitectura.png)
 
 ### Overview
 
@@ -153,6 +165,8 @@ The Web Framework is designed to handle concurrent HTTP client requests using a 
 
 
 ## Class Diagram
+
+![Class Diagram](https://github.com/alexandrac1420/Microframeworks_WEB/blob/master/Pictures/diagramaClases.png)
 
 ### Overview
 The class diagram shows the components involved in handling HTTP requests and managing server operations. Primary classes include `SimpleWebServer`, `ClientHandler`, `Request`, `Response`, `RestService`, and `HelloService`.
@@ -235,6 +249,9 @@ This report outlines the unit tests conducted for the Web Framework project. Tes
    - **Testing Scenario**: Simulate multiple clients requesting `index.html` simultaneously.
    - **Expected Behavior**: The server should handle all requests, respond with `HTTP/1.1 200 OK`, and deliver the correct content for each request.
    - **Verification**: Verify performance and correctness under concurrent load conditions.
+  
+     ![image](https://github.com/user-attachments/assets/3de91727-e239-41a0-a73f-81a9ed00a7ab)
+
 
 ### Conclusion
 The Web Framework has been thoroughly tested across various scenarios to ensure it meets expected behavior under different conditions. The tests confirm the server’s ability to handle both static file requests and dynamic REST services effectively, manage errors gracefully, and support multiple concurrent connections.
