@@ -1,6 +1,6 @@
-﻿# Simple Concurrent Web Server
+﻿# Web Framework for REST Services and Static File Management
 
-This project implements a concurrent HTTP server in Java that serves static files from a specified directory and handles multiple client requests concurrently using a fixed-size thread pool.
+This project enhances a basic web server to support RESTful services and static file management. The server is designed to handle multiple client requests concurrently, utilizing a thread pool for efficient processing of both static files
 
 ![Demo GIF](https://github.com/alexandrac1420/Aplicaciones_Distribuidas/blob/master/out/diagrama/Dise%C3%B1o%20sin%20t%C3%ADtulo.gif)
 
@@ -58,9 +58,9 @@ You need to install the following tools and configure their dependencies:
 
 1. Clone the repository and navigate into the project directory:
     ```sh
-    git clone https://github.com/alexandrac1420/Aplicaciones_Distribuidas.git
+    git clone https://github.com/alexandrac1420/Microframeworks_WEB.git
 
-    cd Aplicaciones_Distribuidas
+    cd Microframeworks_WEB
     ```
 
 2. Build the project:
@@ -77,7 +77,8 @@ You need to install the following tools and configure their dependencies:
 
 3. Run the application:
     ```sh
-    java -cp target/AplicacionesDistriuidas-1.0-SNAPSHOT.jar edu.escuelaing.arep.SimpleWebServer
+    java -cp target/Microframeworks_WEB-1.0-SNAPSHOT.jar edu.escuelaing.arep.SimpleWebServer
+
     ```
     When running the application, the following message should appear
 
@@ -94,24 +95,47 @@ You need to install the following tools and configure their dependencies:
 
 ### Overview
 
-The Simple Concurrent Web Server is designed to handle multiple HTTP client requests concurrently using a thread pool. The server is capable of serving static files and processing simple REST-like API requests.
+The Web Framework is designed to handle concurrent HTTP client requests using a thread pool. It supports serving static files and processing REST API requests.
 
 ### Components
 
 #### 1. **SimpleWebServer**
-   - **Role**: This is the main class of the server. It initializes a `ServerSocket` on a specified port and listens for incoming client connections. The server uses a fixed-size thread pool (`ExecutorService`) to handle each client request concurrently.
+   - **Role**: Initializes a `ServerSocket` and listens for incoming client connections. Uses a thread pool (`ExecutorService`) for concurrent request handling.
    - **Responsibilities**:
      - Accept incoming client connections.
      - Delegate the handling of each client connection to a `ClientHandler`.
      - Manage the lifecycle of the server, including startup and shutdown.
 
 #### 2. **ClientHandler**
-   - **Role**: This class is responsible for processing individual client requests. It implements the `Runnable` interface, allowing it to be executed in a separate thread by the thread pool.
+   - **Role**: Processes individual client requests in separate threads.
    - **Responsibilities**:
-     - Read and parse the HTTP request from the client.
-     - Serve static files from the specified directory or handle REST-like API requests.
-     - Send appropriate HTTP responses back to the client, including handling errors such as "404 Not Found".
-     - Close the client socket after processing the request to ensure no resource leaks.
+     - Parse HTTP requests.
+     - Serve static files or handle REST API requests.
+     - Send HTTP responses, including error handling.
+     - Close client socket after processing.
+
+#### 3. **Request**
+   - **Role**: Represents HTTP requests. Parses and stores request data.
+   - **Responsibilities**:
+     - Store HTTP method, URI, headers, and body.
+     - Provide methods to access request data.
+
+#### 4. **Response**
+   - **Role**: Represents HTTP responses. Constructs and sends responses to clients.
+   - **Responsibilities**:
+     - Set HTTP status code, headers, and body.
+     - Send response data to the client.
+
+#### 5. **RestService**
+   - **Role**: Abstract class/interface for REST API services.
+   - **Responsibilities**:
+     - Define structure for handling REST requests.
+     - Provide methods for generating responses.
+
+#### 6. **HelloService**
+   - **Role**: Concrete implementation of `RestService` for the `/hello` endpoint.
+   - **Responsibilities**:
+     - Handle `/hello` requests and respond with a greeting.
 
 ### Interaction Flow
 
@@ -130,97 +154,90 @@ The Simple Concurrent Web Server is designed to handle multiple HTTP client requ
 
 ## Class Diagram
 
-![Class Diagram](https://github.com/alexandrac1420/Aplicaciones_Distribuidas/blob/master/out/diagrama/diagramaClases.png)
-
-
 ### Overview
-
-The class diagram for the Simple Concurrent Web Server project provides a detailed view of the components involved in handling HTTP requests and managing server operations. The primary classes include `SimpleWebServer`, `ClientHandler`, `RestService`, and its implementation `HelloService`.
+The class diagram shows the components involved in handling HTTP requests and managing server operations. Primary classes include `SimpleWebServer`, `ClientHandler`, `Request`, `Response`, `RestService`, and `HelloService`.
 
 ### Class Descriptions
 
-#### 1. **SimpleWebServer**
-   - **Role**: The `SimpleWebServer` class acts as the central controller of the server. It listens for incoming HTTP requests on a specific port (typically port 8080) and delegates the handling of these requests to `ClientHandler` instances.
+1. **SimpleWebServer**
+   - **Role**: Central controller, manages server socket and delegates request handling.
    - **Key Responsibilities**:
-     - **ServerSocket Management**: Maintains a `ServerSocket` that listens for client connections.
-     - **Concurrency Handling**: Utilizes a `Thread Pool (ExecutorService)` to manage multiple client connections concurrently.
-     - **Routing**: Routes incoming requests to the appropriate handler, which could be static file serving or REST API processing.
+     - **ServerSocket Management**: Maintains a `ServerSocket`.
+     - **Concurrency Handling**: Uses `ExecutorService` for concurrent connections.
+     - **Routing**: Routes requests to appropriate handlers.
 
-#### 2. **ClientHandler**
-   - **Role**: The `ClientHandler` class is responsible for processing individual HTTP requests. It reads the request, determines the appropriate action (such as serving a static file or processing a REST API request), and returns the response to the client.
+2. **ClientHandler**
+   - **Role**: Processes individual requests, handles static files and REST API requests.
    - **Key Responsibilities**:
-     - **Request Handling**: Parses HTTP requests and determines the type of response needed.
-     - **Static File Serving**: Serves static files like HTML, CSS, and images from the server’s resources.
-     - **REST API Processing**: Handles API requests by interacting with various services, such as the `HelloService`.
+     - **Request Handling**: Parses and processes requests.
+     - **Static File Serving**: Serves files from the server.
+     - **REST API Processing**: Interacts with `RestService`.
 
-#### 3. **RestService**
-   - **Role**: `RestService` is an abstract class or interface that defines the structure for handling RESTful API requests.
+3. **Request**
+   - **Role**: Represents and parses HTTP requests.
    - **Key Responsibilities**:
-     - **Response Generation**: Provides a method to generate responses based on the requests received.
+     - **Data Storage**: Stores method, URI, headers, and body.
+     - **Data Access**: Provides methods for accessing request data.
 
-#### 4. **HelloService**
-   - **Role**: The `HelloService` class implements the `RestService` interface and is specifically designed to handle requests directed at the `/hello` endpoint.
+4. **Response**
+   - **Role**: Constructs and sends HTTP responses.
    - **Key Responsibilities**:
-     - **Handling Specific Requests**: Responds to `/hello` requests with a pre-defined message or behavior.
+     - **Response Construction**: Sets status code, headers, and body.
+     - **Data Sending**: Sends response data to the client.
 
-### Relationships Between Classes
+5. **RestService**
+   - **Role**: Abstract class/interface for RESTful services.
+   - **Key Responsibilities**:
+     - **Response Generation**: Provides methods for response creation.
 
-- **`SimpleWebServer` and `ClientHandler`**:
-  - The `SimpleWebServer` class uses the `ClientHandler` to process each incoming client request. The `ClientHandler` is instantiated and managed by the server, allowing it to handle requests in separate threads provided by the thread pool.
-  
-- **`SimpleWebServer` and `RestService`**:
-  - The `SimpleWebServer` class manages instances of `RestService`, routing requests that match certain patterns (like `/hello`) to the appropriate service. This allows for scalable and modular handling of different API endpoints.
+6. **HelloService**
+   - **Role**: Concrete implementation of `RestService` for `/hello` endpoint.
+   - **Key Responsibilities**:
+     - **Request Handling**: Responds to `/hello` requests.
 
-- **`RestService` and `HelloService`**:
-  - `HelloService` is a concrete implementation of `RestService`. It defines the specific behavior for the `/hello` endpoint, returning a greeting or other relevant information.
-
-
-## Test Report - Simple Concurrent Web Server
+## Test Report - Web Framework for REST Services and Static File Management
 
 ### Author
-Name: Alexandra Cortes Tovar
+- **Name**: Alexandra Cortes Tovar
 
 ### Date
-Date: 21/08/2024
+- **Date**: 28/08/2024
 
 ### Summary
-This report outlines the unit tests conducted for the Simple Concurrent Web Server project. Each test aimed to validate specific functionalities and behaviors of the server under various conditions. The server was tested for its ability to handle REST-like services, serve static files, handle missing resources, and manage multiple concurrent connections.
+This report outlines the unit tests conducted for the Web Framework project. Tests validated the server’s ability to handle REST services, serve static files, handle missing resources, and manage multiple concurrent connections.
 
 ### Tests Conducted
 
 1. **Test `testHelloServiceResponse`**
-   - **Description**: Validates the server's ability to handle requests to the REST-like hello service.
-   - **Objective**: Ensure the server responds correctly with a greeting message when receiving GET requests at `/app/hello`.
-   - **Testing Scenario**: Clients simulate HTTP GET requests to `/app/hello?name=World`.
-   - **Expected Behavior**: The server should respond with `HTTP/1.1 200 OK` and a JSON message containing the greeting, such as `{"nombre": "World"}` and `Hola, World`.
-   - **Verification**: Confirms that the response contains the correct content, validating the server's processing of dynamic requests.
+   - **Description**: Validates the server’s handling of `/hello` requests.
+   - **Objective**: Ensure correct greeting response for GET requests at `/app/hello`.
+   - **Testing Scenario**: Clients simulate GET requests to `/app/hello?name=World`.
+   - **Expected Behavior**: Response should include `HTTP/1.1 200 OK` and JSON with greeting.
+   - **Verification**: Check response content for correctness.
 
 2. **Test `testLoadStaticFile`**
-   - **Description**: Checks the server's capability to serve static files.
-   - **Objective**: Ensure that the server correctly serves files like `index.html` from the designated directory.
-   - **Testing Scenario**: A client requests the `index.html` file from the server.
-   - **Expected Behavior**: The server should respond with `HTTP/1.1 200 OK` and the correct content of the `index.html` file.
-   - **Verification**: Validates that the file is served correctly, ensuring the server can handle static file requests.
+   - **Description**: Checks serving of static files like `index.html`.
+   - **Objective**: Validate correct serving of static files from the directory.
+   - **Testing Scenario**: Request `index.html` from the server.
+   - **Expected Behavior**: Response should include `HTTP/1.1 200 OK` and file content.
+   - **Verification**: Confirm file is served correctly.
 
 3. **Test `testInvalidRequest`**
-   - **Description**: Tests the server's behavior when a requested file does not exist.
-   - **Objective**: Ensure the server responds with a `404 Not Found` status for non-existent resources.
-   - **Testing Scenario**: A client requests a file that is not present in the server's root directory, such as `nonexistentfile.html`.
-   - **Expected Behavior**: The server should respond with `HTTP/1.1 404 Not Found` and an appropriate error message.
-   - **Verification**: Confirms that the server handles missing resources correctly, maintaining proper HTTP status codes.
+   - **Description**: Tests response for non-existent files.
+   - **Objective**: Ensure `404 Not Found` for missing resources.
+   - **Testing Scenario**: Request a non-existent file like `nonexistentfile.html`.
+   - **Expected Behavior**: Response should include `HTTP/1.1 404 Not Found` and an appropriate error message.
+   - **Verification**: Confirm proper handling of missing resources with correct HTTP status.
 
 4. **Test `testMultipleConnections`**
-   - **Description**: Evaluates the server's ability to handle multiple concurrent connections.
-   - **Objective**: Ensure the server can process multiple requests simultaneously without errors or significant performance degradation.
-   - **Testing Scenario**: Five clients simultaneously request the `index.html` file from the server.
-   - **Expected Behavior**: The server should respond with `HTTP/1.1 200 OK` and the correct content for each request, handling all connections efficiently.
-   - **Verification**: Confirms that the server maintains performance and correctness under concurrent load.
-  
-![image](https://github.com/user-attachments/assets/edaa41a8-25f6-44f6-8759-c3c282201636)
-
+   - **Description**: Evaluates the server’s capability to handle multiple concurrent connections.
+   - **Objective**: Ensure the server can process simultaneous requests without errors or significant performance issues.
+   - **Testing Scenario**: Simulate multiple clients requesting `index.html` simultaneously.
+   - **Expected Behavior**: The server should handle all requests, respond with `HTTP/1.1 200 OK`, and deliver the correct content for each request.
+   - **Verification**: Verify performance and correctness under concurrent load conditions.
 
 ### Conclusion
-The Simple Concurrent Web Server was rigorously tested across multiple scenarios to ensure it meets the expected behavior under various conditions. These tests validate the server's capability to handle dynamic and static content requests, manage errors gracefully, and support concurrent client connections.
+The Web Framework has been thoroughly tested across various scenarios to ensure it meets expected behavior under different conditions. The tests confirm the server’s ability to handle both static file requests and dynamic REST services effectively, manage errors gracefully, and support multiple concurrent connections.
 
 
 ## Built With
