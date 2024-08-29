@@ -88,6 +88,18 @@ You need to install the following tools and configure their dependencies:
 
     And now you can access `index.html` and other static files.
 
+### Usage
+
+1. **Static Files**: Access `index.html` and other static files (CSS, JavaScript, images) by navigating to `http://localhost:808index.html` in your web browser.
+
+2. **Dynamic Greeting**: 
+   - **GET Request**: Open `index.html` in your browser. You can input a name into the provided form. The server will send a GET request to `/app/hello?name=<YourName>` and respond with a JSON message and plain text greeting. For example, if you input "World", the response will include:
+     - **JSON**: `{"nombre": "World"}`
+     - **Plain Text**: `Hola, World`
+
+3. **POST Request**: 
+   - **POST Request**: Using a tool like Postman or a similar HTTP client, send a POST request to `http://localhost:8080/app/hello` with a payload containing a name. The server will respond with a message indicating the received input, e.g., `Post received: <YourName>`. For example, sending a POST request with the payload `{"name": "Jose Mario"}` will return `Post received: Jose Mario`.
+
     
 ## Architecture
 
