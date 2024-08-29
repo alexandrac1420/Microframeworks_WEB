@@ -2,7 +2,7 @@
 
 This project enhances a basic web server to support RESTful services and static file management. The server is designed to handle multiple client requests concurrently, utilizing a thread pool for efficient processing of both static files
 
-![Demo GIF](https://github.com/alexandrac1420/Aplicaciones_Distribuidas/blob/master/out/diagrama/Dise%C3%B1o%20sin%20t%C3%ADtulo.gif)
+![Demo GIF](https://github.com/alexandrac1420/Microframeworks_WEB/blob/master/Pictures/gif.gif)
 
 
 ## Getting Started
