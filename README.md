@@ -218,7 +218,7 @@ The class diagram shows the components involved in handling HTTP requests and ma
 - **Date**: 28/08/2024
 
 ### Summary
-This report outlines the unit tests conducted for the Web Framework project. Tests validated the server’s ability to handle REST services, serve static files, handle missing resources, and manage multiple concurrent connections.
+This report outlines the unit tests conducted for the Web Framework project. Tests were performed to validate the server’s ability to handle REST services, serve static files, manage errors for missing resources, and handle multiple concurrent connections. During testing, some intermittent issues were observed where the test cases failed initially but passed on subsequent runs.
 
 ### Tests Conducted
 
@@ -227,6 +227,7 @@ This report outlines the unit tests conducted for the Web Framework project. Tes
    - **Objective**: Ensure correct greeting response for GET requests at `/app/hello`.
    - **Testing Scenario**: Clients simulate GET requests to `/app/hello?name=World`.
    - **Expected Behavior**: Response should include `HTTP/1.1 200 OK` and JSON with greeting.
+   - **Outcome**: The test initially encountered a `RejectedExecutionException` due to thread pool termination. On subsequent runs, the test passed, confirming the correct response was generated when the server thread pool was active.
    - **Verification**: Check response content for correctness.
 
 2. **Test `testLoadStaticFile`**
@@ -234,6 +235,7 @@ This report outlines the unit tests conducted for the Web Framework project. Tes
    - **Objective**: Validate correct serving of static files from the directory.
    - **Testing Scenario**: Request `index.html` from the server.
    - **Expected Behavior**: Response should include `HTTP/1.1 200 OK` and file content.
+   - **Outcome**: Similar to the previous test, this test initially failed due to a `RejectedExecutionException`. The issue was resolved in subsequent runs, with the server correctly serving the requested file.
    - **Verification**: Confirm file is served correctly.
 
 3. **Test `testInvalidRequest`**
@@ -241,20 +243,27 @@ This report outlines the unit tests conducted for the Web Framework project. Tes
    - **Objective**: Ensure `404 Not Found` for missing resources.
    - **Testing Scenario**: Request a non-existent file like `nonexistentfile.html`.
    - **Expected Behavior**: Response should include `HTTP/1.1 404 Not Found` and an appropriate error message.
+   - **Outcome**: Initially failed due to a `RejectedExecutionException`. The server returned the correct 404 status and error message in subsequent successful runs.
    - **Verification**: Confirm proper handling of missing resources with correct HTTP status.
 
-4. **Test `testMultipleConnections`**
+4. **Test `testPostRequest`**
+   - **Description**: Validates server handling of POST requests to `/app/hello`.
+   - **Objective**: Ensure the server correctly processes POST requests and responds appropriately.
+   - **Testing Scenario**: Send a POST request with JSON data to `/app/hello`.
+   - **Expected Behavior**: The server should respond with a message acknowledging the received input.
+   - **Outcome**: Initial test attempts failed due to `RejectedExecutionException`. Later runs passed, verifying that the server correctly handled the POST request when the thread pool was properly managed.
+   - **Verification**: Check the response for correctness based on the provided input.
+
+5. **Test `testMultipleConnections`**
    - **Description**: Evaluates the server’s capability to handle multiple concurrent connections.
    - **Objective**: Ensure the server can process simultaneous requests without errors or significant performance issues.
    - **Testing Scenario**: Simulate multiple clients requesting `index.html` simultaneously.
    - **Expected Behavior**: The server should handle all requests, respond with `HTTP/1.1 200 OK`, and deliver the correct content for each request.
+   - **Outcome**: Initially failed due to a `RejectedExecutionException` but passed in subsequent runs. The server demonstrated the ability to manage concurrent requests effectively after the initial issues were addressed.
    - **Verification**: Verify performance and correctness under concurrent load conditions.
   
-     ![image](https://github.com/user-attachments/assets/3de91727-e239-41a0-a73f-81a9ed00a7ab)
-
-
-### Conclusion
-The Web Framework has been thoroughly tested across various scenarios to ensure it meets expected behavior under different conditions. The tests confirm the server’s ability to handle both static file requests and dynamic REST services effectively, manage errors gracefully, and support multiple concurrent connections.
+   
+   ![image](https://github.com/user-attachments/assets/3de91727-e239-41a0-a73f-81a9ed00a7ab)
 
 
 ## Built With
@@ -265,7 +274,7 @@ The Web Framework has been thoroughly tested across various scenarios to ensure 
 
 ## Versioning
 
-I use [GitHub](https://github.com/) for versioning. For the versions available, see the [tags on this repository](https://github.com/alexandrac1420/Aplicaciones_Distribuidas.git).
+I use [GitHub](https://github.com/) for versioning. For the versions available, see the [tags on this repository](https://github.com/alexandrac1420/Microframeworks_WEB.git).
 
 ## Authors
 
