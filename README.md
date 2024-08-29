@@ -77,7 +77,7 @@ You need to install the following tools and configure their dependencies:
 
 3. Run the application:
     ```sh
-    java -cp target/Microframeworks_WEB-1.0-SNAPSHOT.jar edu.escuelaing.arep.SimpleWebServer
+    java -cp target/Spark-1.0-SNAPSHOT.jar edu.escuelaing.arep.SimpleWebServer 
 
     ```
     When running the application, the following message should appear
