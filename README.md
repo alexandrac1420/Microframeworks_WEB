@@ -91,7 +91,7 @@ You need to install the following tools and configure their dependencies:
     
 ## Architecture
 
-![Architecture Diagram](https://github.com/alexandrac1420/Aplicaciones_Distribuidas/blob/master/out/diagrama/diagrama.png)
+![Architecture Diagram](https://github.com/alexandrac1420/Microframeworks_WEB/blob/master/Pictures/Arquitectura.png)
 
 ### Overview
 
@@ -153,6 +153,8 @@ The Web Framework is designed to handle concurrent HTTP client requests using a 
 
 
 ## Class Diagram
+
+![Class Diagram](https://github.com/alexandrac1420/Microframeworks_WEB/blob/master/Pictures/diagramaClases.png)
 
 ### Overview
 The class diagram shows the components involved in handling HTTP requests and managing server operations. Primary classes include `SimpleWebServer`, `ClientHandler`, `Request`, `Response`, `RestService`, and `HelloService`.
