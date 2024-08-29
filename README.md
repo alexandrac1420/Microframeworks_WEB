@@ -90,15 +90,17 @@ You need to install the following tools and configure their dependencies:
 
 ### Usage
 
-1. **Static Files**: Access `index.html` and other static files (CSS, JavaScript, images) by navigating to `http://localhost:808index.html` in your web browser.
+1. **Static Files**: Access `index.html` and other static files (CSS, JavaScript, images) by navigating to `http://localhost:8080/index.html` in your web browser.
 
-2. **Dynamic Greeting**: 
-   - **GET Request**: Open `index.html` in your browser. You can input a name into the provided form. The server will send a GET request to `/app/hello?name=<YourName>` and respond with a JSON message and plain text greeting. For example, if you input "World", the response will include:
-     - **JSON**: `{"nombre": "World"}`
-     - **Plain Text**: `Hola, World`
+2. **Dynamic Greeting**:
+   - **GET Request**: Open `index.html` in your browser. In the "GET Request" section, type a name into the provided input field and click the "Get Input" button. This action sends a GET request to `/app/hello?name=<YourName>`. The server will respond with:
+     - **Plain Text**: A greeting message like `Hola, <YourName>`. For example, if you input "World", the response will be `Hola, World`.
+     - **JSON**: A JSON object with the greeting message, such as `{"nombre": "<YourName>"}`. For instance, for the name "World", the response will be `{"nombre": "World"}`.
 
-3. **POST Request**: 
-   - **POST Request**: Using a tool like Postman or a similar HTTP client, send a POST request to `http://localhost:8080/app/hello` with a payload containing a name. The server will respond with a message indicating the received input, e.g., `Post received: <YourName>`. For example, sending a POST request with the payload `{"name": "Jose Mario"}` will return `Post received: Jose Mario`.
+3. **POST Request**:
+   - **POST Request**: In the "POST Request" section of `index.html`, type a name into the input field and click the "Post Input" button. This sends a POST request to `/app/hellopost?name=<YourName>`. The server will respond with:
+     - **Plain Text**: A message indicating the received input, like `Post received: <YourName>`. For example, if you input "Jose Mario", the response will be `Post received: Jose Mario`.
+     - **JSON**: A JSON object with the received name, for instance, `{"name": "<YourName>"}`. If you input "Jose Mario", the response will be `{"name": "Jose Mario"}`.
 
     
 ## Architecture
@@ -107,60 +109,63 @@ You need to install the following tools and configure their dependencies:
 
 ### Overview
 
-The Web Framework is designed to handle concurrent HTTP client requests using a thread pool. It supports serving static files and processing REST API requests.
+The Web Framework is designed to handle HTTP client requests, serve static files, and process REST API requests efficiently. The architecture enables seamless interaction between the client, the browser, and the backend server.
 
 ### Components
 
-#### 1. **SimpleWebServer**
-   - **Role**: Initializes a `ServerSocket` and listens for incoming client connections. Uses a thread pool (`ExecutorService`) for concurrent request handling.
+#### 1. **Client**
+   - **Role**: Represents the end-user who interacts with the application through a web browser.
    - **Responsibilities**:
-     - Accept incoming client connections.
-     - Delegate the handling of each client connection to a `ClientHandler`.
-     - Manage the lifecycle of the server, including startup and shutdown.
+     - Send HTTP requests via the browser to the server.
+     - Receive and display HTTP responses, including web pages and API results.
 
-#### 2. **ClientHandler**
-   - **Role**: Processes individual client requests in separate threads.
+#### 2. **Browser**
+   - **Role**: Serves as the interface through which the client interacts with the web server.
+   - **Components**:
+     - **index.html**: The main HTML file that structures the web content.
+     - **style.css**: The CSS file that styles the content.
+     - **script.js**: The JavaScript file that adds interactivity.
+     - **image.png**: Example of an image that can be displayed on the page.
    - **Responsibilities**:
-     - Parse HTTP requests.
-     - Serve static files or handle REST API requests.
-     - Send HTTP responses, including error handling.
-     - Close client socket after processing.
+     - Load and render the web content (HTML, CSS, JS, images).
+     - Send requests for static files or REST API calls to the backend server.
 
-#### 3. **Request**
-   - **Role**: Represents HTTP requests. Parses and stores request data.
+#### 3. **Backend Server**
+   - **Role**: Processes client requests and serves the appropriate content or API responses.
+   - **Components**:
+     - **SimpleWebServer**: The core server class that manages HTTP requests and delegates tasks to appropriate handlers.
+     - **Request**: Represents and parses HTTP requests from the client.
+     - **Response**: Constructs and sends HTTP responses to the client.
+     - **RestService**: Abstract class/interface for handling RESTful API requests.
+     - **HelloService**: Concrete implementation of `RestService` that processes requests to the `/hello` endpoint.
    - **Responsibilities**:
-     - Store HTTP method, URI, headers, and body.
-     - Provide methods to access request data.
-
-#### 4. **Response**
-   - **Role**: Represents HTTP responses. Constructs and sends responses to clients.
-   - **Responsibilities**:
-     - Set HTTP status code, headers, and body.
-     - Send response data to the client.
-
-#### 5. **RestService**
-   - **Role**: Abstract class/interface for REST API services.
-   - **Responsibilities**:
-     - Define structure for handling REST requests.
-     - Provide methods for generating responses.
-
-#### 6. **HelloService**
-   - **Role**: Concrete implementation of `RestService` for the `/hello` endpoint.
-   - **Responsibilities**:
-     - Handle `/hello` requests and respond with a greeting.
+     - Accept and parse incoming HTTP requests.
+     - Serve static files (HTML, CSS, JS, images) to the client.
+     - Process REST API requests and return dynamic content.
+     - Manage the lifecycle of client connections and ensure proper resource allocation.
 
 ### Interaction Flow
 
-1. **Server Initialization**: The `SimpleWebServer` starts and initializes a `ServerSocket` on port 8080. It also sets up a thread pool with a fixed number of threads.
+1. **Server Initialization**: 
+   - The `SimpleWebServer` starts, initializing the necessary components to handle client requests. The server listens on port 8080, waiting for incoming connections.
 
 2. **Request Handling**:
-   - When a client sends an HTTP request, the server accepts the connection and creates a new `ClientHandler` instance.
-   - The `ClientHandler` reads the request, determines whether it’s a request for a static file or a REST-like API request, and processes it accordingly.
-   - The appropriate response (file content, JSON response, or an error message) is sent back to the client.
+   - The client accesses the web application via the browser, which sends an HTTP request to the `SimpleWebServer`.
+   - For static files, the server retrieves the requested file (e.g., `index.html`) and sends it back to the browser.
+   - For REST API requests, the server uses the `RestService` to process the request. The `HelloService` handles requests to the `/hello` endpoint.
+     - In `index.html`, users can input their names, and the server will respond with a personalized greeting in JSON and plain text.
+     - POST requests are also supported, where the server responds with a message like "Post received: Jose Mario."
 
-3. **Concurrency**: Multiple client requests are handled concurrently by the thread pool, allowing the server to efficiently manage several connections at the same time.
+3. **Concurrency**: 
+   - The server is capable of handling multiple requests simultaneously, ensuring that several clients can interact with the server without delay.
 
-4. **Shutdown**: When the server needs to be stopped, it gracefully shuts down the thread pool and closes the server socket.
+4. **Response**:
+   - The server constructs the appropriate HTTP response using the `Response` class and sends it back to the client, completing the interaction.
+
+5. **Shutdown**:
+   - When required, the server can be gracefully shut down, closing all connections and freeing resources.
+
+This architecture ensures that both static content and dynamic RESTful services are effectively managed and delivered to the client.
 
 
 
