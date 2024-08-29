@@ -249,6 +249,9 @@ This report outlines the unit tests conducted for the Web Framework project. Tes
    - **Testing Scenario**: Simulate multiple clients requesting `index.html` simultaneously.
    - **Expected Behavior**: The server should handle all requests, respond with `HTTP/1.1 200 OK`, and deliver the correct content for each request.
    - **Verification**: Verify performance and correctness under concurrent load conditions.
+  
+     ![image](https://github.com/user-attachments/assets/3de91727-e239-41a0-a73f-81a9ed00a7ab)
+
 
 ### Conclusion
 The Web Framework has been thoroughly tested across various scenarios to ensure it meets expected behavior under different conditions. The tests confirm the server’s ability to handle both static file requests and dynamic REST services effectively, manage errors gracefully, and support multiple concurrent connections.
