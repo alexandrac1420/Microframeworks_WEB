@@ -13,7 +13,7 @@ public class AppTest extends TestCase {
 
     private static final String SERVER_URL = "http://localhost:8080/";
     private static Thread serverThread;
-    private static ExecutorService executorService;
+    private ExecutorService executorService;
     private static boolean isServerStarted = false;
 
     @Override
@@ -22,21 +22,21 @@ public class AppTest extends TestCase {
         if (!isServerStarted) {
             startServer();
         }
+        executorService = Executors.newFixedThreadPool(5);
     }
 
     @Override
     protected void tearDown() throws Exception {
+        if (executorService != null) {
+            executorService.shutdown();
+            if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
+                executorService.shutdownNow();
+            }
+        }
         super.tearDown();
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        stopServer(); 
-        super.finalize();
-    }
-
     private static void startServer() throws Exception {
-        executorService = Executors.newFixedThreadPool(5);
         serverThread = new Thread(() -> {
             try {
                 SimpleWebServer.main(null);
@@ -59,7 +59,7 @@ public class AppTest extends TestCase {
                 }
                 conn.disconnect();
             } catch (Exception e) {
-                Thread.sleep(1000); 
+                Thread.sleep(1000);
             }
             retries--;
         }
@@ -68,16 +68,7 @@ public class AppTest extends TestCase {
             throw new IllegalStateException("El servidor no se pudo iniciar correctamente.");
         }
 
-        isServerStarted = true; 
-    }
-
-    private static void stopServer() throws Exception {
-        SimpleWebServer.stop(); 
-        executorService.shutdownNow(); 
-        if (serverThread != null) {
-            serverThread.join(5000); 
-        }
-        isServerStarted = false;
+        isServerStarted = true;
     }
 
     public void testHelloServiceResponse() throws Exception {
@@ -100,7 +91,7 @@ public class AppTest extends TestCase {
                 e.printStackTrace();
                 fail("Conexión fallida: " + e.getMessage());
             }
-        }).get();  // Espera a que la tarea se complete
+        }).get(); 
     }
 
     public void testLoadStaticFile() throws Exception {
