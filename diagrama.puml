@@ -1,0 +1,33 @@
+@startuml
+class SimpleWebServer {
+    +void main(String[] args)
+    +void stop()
+    -void addServices()
+    -ExecutorService threadPool
+    -Map<String, RestService> services
+    -ServerSocket serverSocket
+    -boolean running
+}
+
+class ClientHandler {
+    +ClientHandler(Socket clientSocket)
+    +void run()
+    -void printRequestLine(String requestLine, BufferedReader in)
+    -void handleGetRequest(String fileRequested, PrintWriter out, BufferedOutputStream dataOut)
+    -void handlePostRequest(String fileRequested, PrintWriter out, BufferedOutputStream dataOut)
+    -void handleAppRequest(String method, String fileRequested, PrintWriter out)
+    -Socket clientSocket
+}
+
+interface RestService {
+    +String response(String request)
+}
+
+class HelloService {
+    +String response(String request)
+}
+
+SimpleWebServer --> RestService : "manages"
+SimpleWebServer --> ClientHandler : "uses"
+RestService <|-- HelloService
+@enduml

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicaciones Distribuidas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="box">
+            <h1>GET Request</h1>
+            <p>Click the button to fetch data using a GET request.</p>
+            <img src="pizza.jpg" alt="Delicious Pizza">
+            <input type="text" id="textInputGet" placeholder="Type your name here..." />
+            <button onclick="loadGetMsg()">Get Input</button>
+            <div id="getResult"></div>
+        </div>
+
+        <div class="box">
+            <h1>POST Request</h1>
+            <p>Click the button to submit data using a POST request.</p>
+            <img src="pizza.jpg" alt="Delicious Pizza">
+            <input type="text" id="textInputPost" placeholder="Type your name here..." />
+            <button onclick="loadPostMsg()">Post Input</button>
+            <div id="postResult"></div>
+        </div>
+    </div>
+
+    <script>
+        function loadGetMsg() {
+            let nameVar = document.getElementById("textInputGet").value;
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function() {
+                document.getElementById("getResult").innerHTML = this.responseText;
+            }
+            xhttp.open("GET", "/app/hello?name=" + encodeURIComponent(nameVar));
+            xhttp.send();
+        }
+
+        function loadPostMsg() {
+            let nameVar = document.getElementById("textInputPost").value;
+            let url = "/app/hellopost?name=" + encodeURIComponent(nameVar);
+
+            fetch(url, {method: 'POST'})
+                .then(response => response.text())
+                .then(text => document.getElementById("postResult").innerHTML = text);
+        }
+    </script>
+</body>
+</html>
